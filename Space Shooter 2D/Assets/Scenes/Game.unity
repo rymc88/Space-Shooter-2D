@@ -154,6 +154,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 5
+  _playersInitials: 
+  score: 0
+  _powerupActive: 0
+  _laserPrefab: {fileID: 5904893585865984368, guid: eecf9328703804ca2967d30cbc98e42f,
+    type: 3}
 --- !u!65 &563923485
 BoxCollider:
   m_ObjectHideFlags: 0
