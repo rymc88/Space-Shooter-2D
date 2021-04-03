@@ -13,13 +13,19 @@ public class Player : MonoBehaviour
     private float _fireTime = -1f;
     [SerializeField] private int _lives = 3;
     private SpawnManager _spawnManager;
+    [SerializeField] private GameObject _tripleShotPrefab;
+    [SerializeField] private bool _isTripleShotActive = false;
+    [SerializeField] private bool _isSpeedBoastActive = false;
+    [SerializeField] private float _speedMulitplier = 2.0f;
+    [SerializeField] private bool _isShieldActive = false;
+    [SerializeField] private GameObject _shieldVisualizer;
     
 
    // Start is called before the first frame update
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
-        _spawnManager = GameObject.FindGameObjectWithTag("SpawnManager").GetComponent<SpawnManager>();
+        _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
 
         if(_spawnManager == null)
         {
@@ -44,41 +50,39 @@ public class Player : MonoBehaviour
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-        Vector3 velocity = new Vector3(horizontalInput, verticalInput, 0) * _speed;
 
+        Vector3 velocity = new Vector3(horizontalInput, verticalInput, 0) * _speed;
         transform.Translate(velocity * Time.deltaTime);
 
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -9, 9), Mathf.Clamp(transform.position.y, -3.8f, 5.8f), 0);
-
-        //transform.position = new Vector3(Mathf.Clamp(transform.position.x, -9, 9), Mathf.Clamp(transform.position.y, -3.5f, 0), 0);
-
-        /*if(transform.position.x < -10)
-            {
-                transform.position = new Vector3(10, transform.position.y, 0);
-            }
-        else if (transform.position.x > 10)
-            {
-                transform.position = new Vector3(-10, transform.position.y, 0);
-            }
-        else if(transform.position.y > 7)
-            {
-                transform.position = new Vector3(transform.position.x, -5, 0);
-            }
-        else if (transform.position.y < -5)
-            {
-                transform.position = new Vector3(transform.position.x, 7, 0);
-            }*/
    }
 
     void FireLaser()
     {
         _fireTime = Time.time + _fireRate;
         var offset = new Vector3(0, 1.05f, 0);
-        Instantiate(_laserPrefab, transform.position + offset, Quaternion.identity);
+
+        if(_isTripleShotActive == true)
+        {
+            Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            Instantiate(_laserPrefab, transform.position + offset, Quaternion.identity);
+        }
+        
     }
 
-  public void PlayerDamage()
+    public void PlayerDamage()
     {
+        if(_isShieldActive == true)
+        {
+            Debug.Log("Shields Deactivated");
+            _shieldVisualizer.SetActive(false);
+            _isShieldActive = false;
+            return;
+        }
+
         _lives -= 1;
 
         if (_lives == 0)
@@ -87,4 +91,40 @@ public class Player : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+
+    public void TripleShotActive()
+    {
+        _isTripleShotActive = true;
+        StartCoroutine(TripleShotPowerDownRoutine());
+    }
+
+    IEnumerator TripleShotPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _isTripleShotActive = false;
+    }
+
+    public void SpeedBoastActive()
+    {
+        _isSpeedBoastActive = true;
+        _speed *= _speedMulitplier;
+        StartCoroutine(SpeedBoastPowerDownRoutine());
+    }
+
+    IEnumerator SpeedBoastPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _isSpeedBoastActive = false;
+        _speed /= _speedMulitplier;
+    }
+
+    public void ShieldPowerUpActive()
+    {
+        _isShieldActive = true;
+        _shieldVisualizer.SetActive(true);
+        Debug.Log("Shields Activated");
+    }
+    
 }
+
