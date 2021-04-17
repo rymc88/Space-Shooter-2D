@@ -5,7 +5,10 @@ using UnityEngine;
 public class PowerUp : MonoBehaviour
 {
     [SerializeField] private float _speed = 3.0f;
-    [SerializeField] private int _powerUpID; //0 = Triple Shot 1 = Speed 2 Shield
+    [SerializeField] private int _powerUpID;
+    //0 = Triple Shot
+    //1 = Speed
+    //2 = Shield
 
     // Start is called before the first frame update
     void Start()
