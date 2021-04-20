@@ -21,6 +21,8 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _shieldVisualizer;
     [SerializeField] private int _score;
     private UIManager _uiManager;
+    [SerializeField] private GameObject _leftEngine;
+    [SerializeField] private GameObject _rightEngine;
 
    // Start is called before the first frame update
     void Start()
@@ -90,6 +92,15 @@ public class Player : MonoBehaviour
         }
 
         _lives -= 1;
+
+        if(_lives == 2)
+        {
+            _leftEngine.SetActive(true);
+        }
+        else if(_lives == 1)
+        {
+            _rightEngine.SetActive(true);
+        }
 
         _uiManager.UpdateLives(_lives);
 
