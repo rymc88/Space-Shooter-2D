@@ -9,11 +9,24 @@ public class Enemy : MonoBehaviour
     private Player _player;
     private Animator _anim;
 
+    [SerializeField] private AudioClip _enemyExplosionClip;
+    [SerializeField] private AudioSource _audioSource;
+
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
+        _audioSource = GetComponent<AudioSource>();
 
-        if(_player == null)
+        if (_audioSource == null)
+        {
+            Debug.LogError("Audio Source on Enemy is Null");
+        }
+        else
+        {
+            _audioSource.clip = _enemyExplosionClip;
+        }
+
+        if (_player == null)
         {
             Debug.LogError("Player is Null");
         }
@@ -50,7 +63,9 @@ public class Enemy : MonoBehaviour
             }
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
+            _audioSource.PlayOneShot(_audioSource.clip);
             Destroy(this.gameObject, 2.8f);
+            
         }
 
         if(other.tag == "Player")
@@ -63,6 +78,7 @@ public class Enemy : MonoBehaviour
             }
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
+            _audioSource.PlayOneShot(_audioSource.clip);
             Destroy(this.gameObject, 2.8f);
         }
     }
