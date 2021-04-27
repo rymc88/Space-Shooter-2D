@@ -11,6 +11,11 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private AudioClip _enemyExplosionClip;
     [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private GameObject _enemyLaserPrefab;
+    private float _fireRate = 3.0f;
+    private float _canFire = -1.0f;
+    [SerializeField] private bool _enemyDead = false;
+
 
     void Start()
     {
@@ -42,13 +47,39 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CalculateMovement();
+
+        if(_enemyDead == false)
+        {
+            EnemyFire();
+        }
+    }
+
+    void EnemyFire()
+    {
+        if (Time.time > _canFire)
+        {
+            _fireRate = Random.Range(3f, 7f);
+            _canFire = Time.time + _fireRate;
+            GameObject enemyLaser = Instantiate(_enemyLaserPrefab, transform.position, Quaternion.identity);
+            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+
+
+            for (int i = 0; i < lasers.Length; i++)
+            {
+                lasers[i].AssignEnemyLaser();
+            }
+        }
+    }
+
+    void CalculateMovement()
+    {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
-        if(transform.position.y < -6)
+        if (transform.position.y < -6)
         {
             transform.position = new Vector3(Random.Range(-9, 9), 8, 0);
         }
-
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -56,6 +87,7 @@ public class Enemy : MonoBehaviour
         if (other.tag == "Laser")
         {
             Destroy(other.gameObject);
+            _enemyDead = true;
             
             if (_player != null)
             {
@@ -64,6 +96,7 @@ public class Enemy : MonoBehaviour
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.PlayOneShot(_audioSource.clip);
+            Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.8f);
             
         }
@@ -71,6 +104,7 @@ public class Enemy : MonoBehaviour
         if(other.tag == "Player")
         {
             Player player = other.GetComponent<Player>();
+            _enemyDead = true;
 
             if(player != null)
             {
@@ -79,6 +113,7 @@ public class Enemy : MonoBehaviour
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
             _audioSource.PlayOneShot(_audioSource.clip);
+            Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.8f);
         }
     }

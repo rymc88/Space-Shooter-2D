@@ -51,6 +51,8 @@ MonoBehaviour:
   _speed: 4
   _enemyExplosionClip: {fileID: 8300000, guid: 5563ecb7e1076014c8c293a818f6b5d9, type: 3}
   _audioSource: {fileID: 0}
+  _enemyLaserPrefab: {fileID: 8785437446559721596, guid: b24f70619987a4f6087b846bb4a0b0ef,
+    type: 3}
 --- !u!212 &4390898155581724165
 SpriteRenderer:
   m_ObjectHideFlags: 0

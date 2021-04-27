@@ -25,6 +25,7 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _rightEngine;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _laserSoundClip;
+    public CameraShake cameraShake;
 
    // Start is called before the first frame update
     void Start()
@@ -106,6 +107,8 @@ public class Player : MonoBehaviour
         }
 
         _lives -= 1;
+
+        StartCoroutine(cameraShake.Shake(.5f, .3f));
 
         if(_lives == 2)
         {
