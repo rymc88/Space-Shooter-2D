@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float _speed = 5.5f;
+    [SerializeField] private float _speed = 3.0f;
     [SerializeField] private string _playersInitials;
     public int score;
     [SerializeField] private bool _powerupActive;
@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     private SpawnManager _spawnManager;
     [SerializeField] private GameObject _tripleShotPrefab;
     [SerializeField] private bool _isTripleShotActive = false;
-    [SerializeField] private bool _isSpeedBoastActive = false;
+    [SerializeField] private bool _isSpeedBoostActive = false;
     [SerializeField] private float _speedMulitplier = 2.0f;
     [SerializeField] private bool _isShieldActive = false;
     [SerializeField] private GameObject _shieldVisualizer;
@@ -25,7 +25,10 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _rightEngine;
     [SerializeField] private AudioSource _audioSource;
     [SerializeField] private AudioClip _laserSoundClip;
+    [SerializeField] private GameObject _thrusters;
     public CameraShake cameraShake;
+    private Animator _animator;
+
 
    // Start is called before the first frame update
     void Start()
@@ -34,6 +37,8 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
+        _animator = GetComponentInChildren<Animator>();
+        
        
         if(_uiManager == null)
         {
@@ -54,6 +59,11 @@ public class Player : MonoBehaviour
             _audioSource.clip = _laserSoundClip;
         }
 
+        if(_animator == null)
+        {
+            Debug.LogError("Animator is Null");
+        }
+
     }
 
    // Update is called once per frame
@@ -72,6 +82,37 @@ public class Player : MonoBehaviour
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
+
+        if(_isSpeedBoostActive == true)
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                _speed = 9.0f;
+                //_thrusters.SetActive(true);
+                _animator.SetBool("Thrusters", true);
+            }
+            else
+            {
+                _speed = 6.0f;
+                //_thrusters.SetActive(false);
+                _animator.SetBool("Thrusters", true);
+            }
+        }
+        else
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                _speed = 6.0f;
+                //_thrusters.SetActive(true);
+                _animator.SetBool("Thrusters", true);
+            }
+            else
+            {
+                _speed = 3.0f;
+                //_thrusters.SetActive(false);
+                _animator.SetBool("Thrusters", false);
+            }
+        }
 
         Vector3 velocity = new Vector3(horizontalInput, verticalInput, 0) * _speed;
         transform.Translate(velocity * Time.deltaTime);
@@ -143,16 +184,15 @@ public class Player : MonoBehaviour
 
     public void SpeedBoastActive()
     {
-        _isSpeedBoastActive = true;
-        _speed *= _speedMulitplier;
+        _isSpeedBoostActive = true;
         StartCoroutine(SpeedBoastPowerDownRoutine());
+        
     }
 
     IEnumerator SpeedBoastPowerDownRoutine()
     {
         yield return new WaitForSeconds(5.0f);
-        _isSpeedBoastActive = false;
-        _speed /= _speedMulitplier;
+        _isSpeedBoostActive = false;
     }
 
     public void ShieldPowerUpActive()

@@ -261,7 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 434332304f1ed44f4a6a9798e94d6ac4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 5.5
+  _speed: 3
   _playersInitials: 
   score: 0
   _powerupActive: 0
@@ -272,7 +272,7 @@ MonoBehaviour:
   _tripleShotPrefab: {fileID: 9181417816207429971, guid: 1de03c6b4ee9f447c97eddc0a1ab0904,
     type: 3}
   _isTripleShotActive: 0
-  _isSpeedBoastActive: 0
+  _isSpeedBoostActive: 0
   _speedMulitplier: 2
   _isShieldActive: 0
   _shieldVisualizer: {fileID: 1642028348}
@@ -281,6 +281,7 @@ MonoBehaviour:
   _rightEngine: {fileID: 1354875255}
   _audioSource: {fileID: 0}
   _laserSoundClip: {fileID: 8300000, guid: 10ff22d91fea21b44b19e25ded073711, type: 3}
+  _thrusters: {fileID: 761684246}
   cameraShake: {fileID: 963194230}
 --- !u!212 &186736617
 SpriteRenderer:
