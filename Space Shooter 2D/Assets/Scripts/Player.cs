@@ -28,6 +28,9 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _thrusters;
     public CameraShake cameraShake;
     private Animator _animator;
+    [SerializeField] private ThrusterBar _thrusterBar;
+    private bool _canUseThruster = true;
+    
 
 
    // Start is called before the first frame update
@@ -39,7 +42,12 @@ public class Player : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         _animator = GetComponentInChildren<Animator>();
         
-       
+        
+        if(_thrusterBar == null)
+        {
+            Debug.LogError("Thruster Bar is NULL");
+        }
+
         if(_uiManager == null)
         {
             Debug.LogError("UI Manager is NULL");
@@ -47,12 +55,12 @@ public class Player : MonoBehaviour
 
         if (_spawnManager == null)
         {
-            Debug.LogError("Spawn Manager is Null");
+            Debug.LogError("Spawn Manager is NULL");
         }
 
         if(_audioSource == null)
         {
-            Debug.LogError("Audio Source on Player is Null");
+            Debug.LogError("Audio Source on Player is NULL");
         }
         else
         {
@@ -85,11 +93,12 @@ public class Player : MonoBehaviour
 
         if(_isSpeedBoostActive == true)
         {
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift) && _canUseThruster == true)
             {
                 _speed = 9.0f;
                 //_thrusters.SetActive(true);
                 _animator.SetBool("Thrusters", true);
+                _thrusterBar.UseThruster(1);
             }
             else
             {
@@ -100,11 +109,12 @@ public class Player : MonoBehaviour
         }
         else
         {
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift) && _canUseThruster == true)
             {
                 _speed = 6.0f;
                 //_thrusters.SetActive(true);
                 _animator.SetBool("Thrusters", true);
+                _thrusterBar.UseThruster(1);
             }
             else
             {
@@ -208,8 +218,14 @@ public class Player : MonoBehaviour
         _uiManager.UpdateScore(_score);
     }
 
+    public void ActivateThruster()
+    {
+        _canUseThruster = true;
+    }
 
-    
-    
+    public void DeactivateThruster()
+    {
+        _canUseThruster = false;
+    }
 }
 
