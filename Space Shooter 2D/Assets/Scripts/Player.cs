@@ -30,6 +30,9 @@ public class Player : MonoBehaviour
     private Animator _animator;
     [SerializeField] private ThrusterBar _thrusterBar;
     private bool _canUseThruster = true;
+    public int _maxAmmo = 15;
+    public int _currentAmmo;
+    [SerializeField] private bool _hasAmmo = true;
     
 
 
@@ -41,6 +44,7 @@ public class Player : MonoBehaviour
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
         _animator = GetComponentInChildren<Animator>();
+        _currentAmmo = _maxAmmo;
         
         
         if(_thrusterBar == null)
@@ -81,7 +85,11 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _fireTime)
         {
-            FireLaser();
+            if(_hasAmmo == true)
+            {
+                FireLaser();
+            }
+            
         }
 
     }
@@ -135,6 +143,7 @@ public class Player : MonoBehaviour
         _fireTime = Time.time + _fireRate;
         var offset = new Vector3(0, 1.05f, 0);
 
+
         if(_isTripleShotActive == true)
         {
             Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
@@ -145,6 +154,13 @@ public class Player : MonoBehaviour
         }
 
         _audioSource.Play();
+        _currentAmmo--;
+
+
+        if(_currentAmmo <= 0)
+        {
+            _hasAmmo = false;
+        }
 
     }
 
@@ -196,7 +212,6 @@ public class Player : MonoBehaviour
     {
         _isSpeedBoostActive = true;
         StartCoroutine(SpeedBoastPowerDownRoutine());
-        
     }
 
     IEnumerator SpeedBoastPowerDownRoutine()
@@ -210,6 +225,13 @@ public class Player : MonoBehaviour
         _isShieldActive = true;
         _shieldVisualizer.SetActive(true);
         Debug.Log("Shields Activated");
+    }
+
+    public void AmmoReload()
+    {
+        _currentAmmo = _maxAmmo;
+        _hasAmmo = true;
+
     }
 
     public void AddScore(int points)

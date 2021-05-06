@@ -14,7 +14,7 @@ public class PowerUp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       
+        
     }
 
     // Update is called once per frame
@@ -48,6 +48,9 @@ public class PowerUp : MonoBehaviour
                         break;
                     case 2:
                         player.ShieldPowerUpActive();
+                        break;
+                    case 3:
+                        player.AmmoReload();
                         break;
                     default:
                         Debug.Log("Default Value");
