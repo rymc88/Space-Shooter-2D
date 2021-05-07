@@ -33,8 +33,9 @@ public class Player : MonoBehaviour
     public int _maxAmmo = 15;
     public int _currentAmmo;
     [SerializeField] private bool _hasAmmo = true;
-    
-
+    [SerializeField] private int _shieldStrength = 3;
+    [SerializeField] SpriteRenderer _spriteRender;
+   
 
    // Start is called before the first frame update
     void Start()
@@ -45,8 +46,7 @@ public class Player : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         _animator = GetComponentInChildren<Animator>();
         _currentAmmo = _maxAmmo;
-        
-        
+            
         if(_thrusterBar == null)
         {
             Debug.LogError("Thruster Bar is NULL");
@@ -166,33 +166,49 @@ public class Player : MonoBehaviour
 
     public void PlayerDamage()
     {
-        if(_isShieldActive == true)
+        if(_isShieldActive == true && _shieldStrength <= 3)
         {
-            _shieldVisualizer.SetActive(false);
-            _isShieldActive = false;
-            return;
+            _shieldStrength--;
+
+            if(_shieldStrength == 2)
+            {
+                _spriteRender.color = Color.magenta;
+            }
+            else if(_shieldStrength == 1)
+            {
+                _spriteRender.color = Color.red;
+            }
+            else if(_shieldStrength <= 0)
+            {
+                _shieldVisualizer.SetActive(false);
+                _isShieldActive = false;
+                return;
+            }
         }
 
-        _lives -= 1;
+        else if(_isShieldActive == false)
+        {
+            _lives -= 1;
+
+            if (_lives == 2)
+            {
+                _leftEngine.SetActive(true);
+            }
+            else if (_lives == 1)
+            {
+                _rightEngine.SetActive(true);
+            }
+
+            _uiManager.UpdateLives(_lives);
+
+            if (_lives == 0)
+            {
+                _spawnManager.OnPlayerDeath();
+                Destroy(this.gameObject);
+            }
+        }
 
         StartCoroutine(cameraShake.Shake(.5f, .3f));
-
-        if(_lives == 2)
-        {
-            _leftEngine.SetActive(true);
-        }
-        else if(_lives == 1)
-        {
-            _rightEngine.SetActive(true);
-        }
-
-        _uiManager.UpdateLives(_lives);
-
-        if (_lives == 0)
-        {
-            _spawnManager.OnPlayerDeath();
-            Destroy(this.gameObject);
-        }
     }
 
 
@@ -222,16 +238,20 @@ public class Player : MonoBehaviour
 
     public void ShieldPowerUpActive()
     {
-        _isShieldActive = true;
-        _shieldVisualizer.SetActive(true);
-        Debug.Log("Shields Activated");
+        if(_isShieldActive != true)
+        {
+            _isShieldActive = true;
+            _shieldStrength = 3;
+            _shieldVisualizer.SetActive(true);
+            _spriteRender.color = Color.cyan;
+        }
+       
     }
 
     public void AmmoReload()
     {
         _currentAmmo = _maxAmmo;
         _hasAmmo = true;
-
     }
 
     public void AddScore(int points)
