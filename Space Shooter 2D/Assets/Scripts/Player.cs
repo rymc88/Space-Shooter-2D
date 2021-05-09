@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
     public int _maxAmmo = 15;
     public int _currentAmmo;
     [SerializeField] private bool _hasAmmo = true;
-    [SerializeField] private int _shieldStrength = 3;
+    [SerializeField] private int _shieldStrength;
     [SerializeField] SpriteRenderer _spriteRender;
    
 
@@ -189,6 +189,9 @@ public class Player : MonoBehaviour
         else if(_isShieldActive == false)
         {
             _lives -= 1;
+            //get handle on Healthbar script
+            //subtract 10 from health
+            //if current health < and > 
 
             if (_lives == 2)
             {
@@ -246,6 +249,29 @@ public class Player : MonoBehaviour
             _spriteRender.color = Color.cyan;
         }
        
+    }
+
+    public void IncreaseHealth()
+    {
+        if(_lives < 3)
+        {
+            _lives++;
+
+            if(_lives == 3)
+            {
+                _leftEngine.SetActive(false);
+            }
+            else if(_lives == 2)
+            {
+                _rightEngine.SetActive(false);
+            }
+
+            _uiManager.UpdateLives(_lives);
+        }
+        else
+        {
+            _lives = 3;
+        }
     }
 
     public void AmmoReload()
