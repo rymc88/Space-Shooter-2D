@@ -35,9 +35,15 @@ public class Player : MonoBehaviour
     [SerializeField] private bool _hasAmmo = true;
     [SerializeField] private int _shieldStrength;
     [SerializeField] SpriteRenderer _spriteRender;
-   
+    [SerializeField] private GameObject _missilePrefab;
+    private GameObject _enemy;
+    [SerializeField] private bool _rapidFire = false;
+    private float _rapidFireRate = .25f;
 
-   // Start is called before the first frame update
+    [SerializeField] private bool _homingMissileActive = false;
+    
+
+    // Start is called before the first frame update
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -87,8 +93,32 @@ public class Player : MonoBehaviour
         {
             if(_hasAmmo == true)
             {
-                FireLaser();
+                if(_rapidFire == true)
+                {
+                    RapidFire();
+                }
+                else
+                {
+                    FireLaser();
+                } 
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.X) && _homingMissileActive == true)
+        {
+            _enemy = GameObject.FindGameObjectWithTag("Enemy");
+
+            if(_enemy != null)
+            {
+                var offset = new Vector3(0, 1.75f, 0);
+                Instantiate(_missilePrefab, transform.position + offset, Quaternion.identity);
+                _homingMissileActive = false;
+            }
+            else
+            {
+                Debug.Log("Enemy Target is NULL");
+            }
+           
             
         }
 
@@ -143,7 +173,6 @@ public class Player : MonoBehaviour
         _fireTime = Time.time + _fireRate;
         var offset = new Vector3(0, 1.05f, 0);
 
-
         if(_isTripleShotActive == true)
         {
             Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
@@ -162,6 +191,30 @@ public class Player : MonoBehaviour
             _hasAmmo = false;
         }
 
+    }
+
+    void RapidFire()
+    {
+        _fireTime = Time.time + _rapidFireRate;
+        var offset = new Vector3(0, 1.05f, 0);
+
+        if (_isTripleShotActive == true)
+        {
+            Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            Instantiate(_laserPrefab, transform.position + offset, Quaternion.identity);
+        }
+
+        _audioSource.Play();
+        _currentAmmo--;
+
+
+        if (_currentAmmo <= 0)
+        {
+            _hasAmmo = false;
+        }
     }
 
     public void PlayerDamage()
@@ -294,6 +347,24 @@ public class Player : MonoBehaviour
     public void DeactivateThruster()
     {
         _canUseThruster = false;
+    }
+
+    public void RapidFireActive()
+    {
+        _rapidFire = true;
+        StartCoroutine(RapidFirePowerDown());
+    }
+
+    IEnumerator RapidFirePowerDown()
+    {
+         yield return new WaitForSeconds(5.0f);
+         _rapidFire = false;
+        
+    }
+
+    public void ActivateHomingMissile()
+    {
+        _homingMissileActive = true;
     }
 }
 

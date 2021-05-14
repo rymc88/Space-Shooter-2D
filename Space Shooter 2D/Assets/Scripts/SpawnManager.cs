@@ -37,7 +37,6 @@ public class SpawnManager : MonoBehaviour
             Vector3 spawnPosition = new Vector3(Random.Range(-10, 10), 7, 0);
             GameObject newEnemy = Instantiate(_enemyPrefab, spawnPosition, Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
-            
         }
     }
 
@@ -49,7 +48,7 @@ public class SpawnManager : MonoBehaviour
         {
             yield return new WaitForSeconds(Random.Range(3.0f, 7.0f));
             Vector3 spawnPosition = new Vector3(Random.Range(-10, 10), 7, 0);
-            int randomPowerUp = Random.Range(0, 5);
+            int randomPowerUp = Random.Range(0, 7);
             Instantiate(_powerUps[randomPowerUp], spawnPosition, Quaternion.identity);
         }
     }

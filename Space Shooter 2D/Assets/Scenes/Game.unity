@@ -289,6 +289,10 @@ MonoBehaviour:
   _hasAmmo: 1
   _shieldStrength: 3
   _spriteRender: {fileID: 1642028349}
+  _missilePrefab: {fileID: 7487504454948718902, guid: 3c0effc74635245979688ff222902f82,
+    type: 3}
+  _rapidFire: 0
+  _homingMissileActive: 0
 --- !u!212 &186736617
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -355,7 +359,7 @@ Transform:
   - {fileID: 1354875256}
   - {fileID: 555674795}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!61 &186736619
 BoxCollider2D:
@@ -1627,7 +1631,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1059074113
 GameObject:
@@ -2173,7 +2177,7 @@ RectTransform:
   - {fileID: 351851289}
   - {fileID: 356034904}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2476,6 +2480,8 @@ MonoBehaviour:
   - {fileID: 8152116079422545234, guid: f623e7d9315284c5ca351b0f1d69b6b5, type: 3}
   - {fileID: 5691061004208857521, guid: 77111df2c56594c27808a770bb2d9108, type: 3}
   - {fileID: 2158023408774903023, guid: 3460e397f2cc14d60b42db2e2fae1e2f, type: 3}
+  - {fileID: 3952672504668750012, guid: 5bf68cfd6158b4d9b97f336bee581142, type: 3}
+  - {fileID: 4580819857078466331, guid: 72225cfbeb4d34ef6a55beab6b9aa936, type: 3}
 --- !u!4 &1914059084
 Transform:
   m_ObjectHideFlags: 0
@@ -2580,7 +2586,7 @@ PrefabInstance:
     - target: {fileID: 4430269910639447446, guid: 83071d2bfe5cd45d9b6a6d00421620ce,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4430269910639447446, guid: 83071d2bfe5cd45d9b6a6d00421620ce,
         type: 3}
