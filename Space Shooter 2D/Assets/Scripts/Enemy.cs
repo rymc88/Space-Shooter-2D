@@ -15,12 +15,15 @@ public class Enemy : MonoBehaviour
     private float _fireRate = 3.0f;
     private float _canFire = -1.0f;
     [SerializeField] private bool _enemyDead = false;
+    [SerializeField] private int _enemyID;
+    
 
 
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
+        
 
         if (_audioSource == null)
         {
@@ -86,7 +89,7 @@ public class Enemy : MonoBehaviour
     {
         if (other.tag == "Laser")
         {
-            Destroy(other.gameObject);
+            Destroy(other.gameObject, 0.1f);
             _enemyDead = true;
             
             if (_player != null)
@@ -95,9 +98,10 @@ public class Enemy : MonoBehaviour
             }
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
-            _audioSource.PlayOneShot(_audioSource.clip);
+            //_audioSource.PlayOneShot(_audioSource.clip);
+            AudioSource.PlayClipAtPoint(_enemyExplosionClip, transform.position);
             Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 2.8f);
+            Destroy(this.gameObject, 0.4f);
             
         }
 
@@ -112,9 +116,10 @@ public class Enemy : MonoBehaviour
             }
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
-            _audioSource.PlayOneShot(_audioSource.clip);
+            //_audioSource.PlayOneShot(_audioSource.clip);
+            AudioSource.PlayClipAtPoint(_enemyExplosionClip, transform.position);
             Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 2.8f);
+            Destroy(this.gameObject, 0.4f);
         }
 
         if(other.tag == "Missile")
@@ -122,9 +127,11 @@ public class Enemy : MonoBehaviour
             Destroy(other.gameObject);
             _enemyDead = true;
             _anim.SetTrigger("OnEnemyDeath");
-            _audioSource.PlayOneShot(_audioSource.clip);
+            _speed = 0;
+            //_audioSource.PlayOneShot(_audioSource.clip);
+            AudioSource.PlayClipAtPoint(_enemyExplosionClip, transform.position);
             Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 2.8f);
+            Destroy(this.gameObject, 0.4f);
         }
     }
 }

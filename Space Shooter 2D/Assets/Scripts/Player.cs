@@ -134,14 +134,12 @@ public class Player : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift) && _canUseThruster == true)
             {
                 _speed = 9.0f;
-                //_thrusters.SetActive(true);
                 _animator.SetBool("Thrusters", true);
                 _thrusterBar.UseThruster(1);
             }
             else
             {
                 _speed = 6.0f;
-                //_thrusters.SetActive(false);
                 _animator.SetBool("Thrusters", true);
             }
         }
@@ -150,14 +148,13 @@ public class Player : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift) && _canUseThruster == true)
             {
                 _speed = 6.0f;
-                //_thrusters.SetActive(true);
                 _animator.SetBool("Thrusters", true);
                 _thrusterBar.UseThruster(1);
+                
             }
             else
             {
                 _speed = 3.0f;
-                //_thrusters.SetActive(false);
                 _animator.SetBool("Thrusters", false);
             }
         }

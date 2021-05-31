@@ -4,37 +4,35 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ThrusterBar : MonoBehaviour
+
 {
-    public Slider thrusterBar;
-    private int _maxThruster = 100;
-    private int _currentThruster;
-
-    private WaitForSeconds regenTick = new WaitForSeconds(0.1f);
-
-    private Coroutine _regen;
-    private Player _player;
-
-    public Gradient gradient;
+    public int maxValue;
     public Image fill;
+    private int _currentValue;
+    private Player _player;
+    private WaitForSeconds regenTick = new WaitForSeconds(0.1f);
+    private Coroutine _regen;
 
     // Start is called before the first frame update
     void Start()
     {
-        _currentThruster = _maxThruster;
-        thrusterBar.maxValue = _maxThruster;
-        thrusterBar.value = _maxThruster;
         _player = GameObject.Find("Player").GetComponent<Player>();
 
-        fill.color = gradient.Evaluate(1f);
+        _currentValue = maxValue;
+        fill.fillAmount = 1; //normalized value 0 - 1
     }
 
-    public void UseThruster(int amount)
+    public void UseThruster (int amount)
     {
-        if(_currentThruster - amount >= 0)
+        if(_currentValue - amount >= 0)
         {
-            _currentThruster -= amount;
-            thrusterBar.value = _currentThruster;
-            fill.color = gradient.Evaluate(thrusterBar.normalizedValue);
+            _currentValue -= amount;
+
+            /*if (_currentValue < 0)
+            {
+                _currentValue = 0;
+            }*/
+            fill.fillAmount = (float)_currentValue / maxValue;
             _player.ActivateThruster();
 
             if(_regen != null)
@@ -42,29 +40,41 @@ public class ThrusterBar : MonoBehaviour
                 StopCoroutine(_regen);
             }
 
-            _regen = StartCoroutine(RegenThrusters());
-
+            _regen = StartCoroutine(RegenThruster());
         }
         else
         {
             _player.DeactivateThruster();
         }
+        
     }
 
-    private IEnumerator RegenThrusters()
+
+    IEnumerator RegenThruster()
     {
         yield return new WaitForSeconds(2.0f);
         _player.ActivateThruster();
 
-        while (_currentThruster < _maxThruster)
+        while(_currentValue < maxValue)
         {
-            _currentThruster += _maxThruster / 100;
-            thrusterBar.value = _currentThruster;
-            fill.color = gradient.Evaluate(thrusterBar.normalizedValue);
+            _currentValue += maxValue / 100;
+            fill.fillAmount = (float)_currentValue / maxValue;
             yield return regenTick;
         }
 
         _regen = null;
     }
 
+    /*public void AddThruster (int thruster)
+   {
+       _currentValue += thruster;
+
+       if(_currentValue > maxValue)
+       {
+           _currentValue = maxValue;
+       }
+
+       fill.fillAmount = (float)_currentValue / maxValue; //fill needs to be between 0-1. It expects a float. 
+   }*/
 }
+

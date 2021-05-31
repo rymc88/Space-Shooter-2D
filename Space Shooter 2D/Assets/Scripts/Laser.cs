@@ -6,10 +6,14 @@ public class Laser : MonoBehaviour
 {
     [SerializeField] private float _speed = 8.0f;
     [SerializeField] private bool _isEnemyLaser = false;
+   
 
+    private Animator _anim;
 
     void Update()
     {
+        _anim = GetComponent<Animator>();
+
         if(_isEnemyLaser == false)
         {
             MoveUp();
@@ -69,5 +73,12 @@ public class Laser : MonoBehaviour
                 player.PlayerDamage();
             }
         }
+
+        if(other.tag == "Enemy")
+        {
+            _anim.SetTrigger("OnHit");
+            _speed = 0.0f;
+        }
     }
+
 }
