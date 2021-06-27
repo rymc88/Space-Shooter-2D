@@ -101,10 +101,15 @@ MonoBehaviour:
   _speed: 4
   _startPos: 0
   _isMovingRight: 0
-  _explosionAudioClip: {fileID: 8300000, guid: 5563ecb7e1076014c8c293a818f6b5d9, type: 3}
   _laserPrefab: {fileID: 8785437446559721596, guid: b24f70619987a4f6087b846bb4a0b0ef,
     type: 3}
-  _enemyDead: 0
+  _minRandomTimeBetweenFire: 0.54
+  _maxRandomTimeBetweenFire: 4
+  _timeBetweenFire: 0
+  _percentageChance: 1e000000140000000a0000000a0000000a0000000a0000000a000000
+  _total: 0
+  _explosionAudioClip: {fileID: 8300000, guid: 5563ecb7e1076014c8c293a818f6b5d9, type: 3}
+  _spawnManager: {fileID: 0}
 --- !u!50 &-435409668508743954
 Rigidbody2D:
   serializedVersion: 4

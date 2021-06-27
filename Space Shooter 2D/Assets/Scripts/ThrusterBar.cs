@@ -4,22 +4,26 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ThrusterBar : MonoBehaviour
-
 {
-    public int maxValue;
+    [SerializeField] private int _maxValue;
     public Image fill;
-    private int _currentValue;
+    [SerializeField] private int _currentValue;
     private Player _player;
     private WaitForSeconds regenTick = new WaitForSeconds(0.1f);
     private Coroutine _regen;
+    [SerializeField] private Text _thrusterCount;
 
-    // Start is called before the first frame update
+    
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
 
-        _currentValue = maxValue;
+        _currentValue = _player._currentThrusters;
+        _maxValue = _player._maxThrusters;
+      
         fill.fillAmount = 1; //normalized value 0 - 1
+
+        _thrusterCount.text = _currentValue + "%";
     }
 
     public void UseThruster (int amount)
@@ -28,14 +32,11 @@ public class ThrusterBar : MonoBehaviour
         {
             _currentValue -= amount;
 
-            /*if (_currentValue < 0)
-            {
-                _currentValue = 0;
-            }*/
-            fill.fillAmount = (float)_currentValue / maxValue;
+            fill.fillAmount = (float)_currentValue / _maxValue;
             _player.ActivateThruster();
+            _thrusterCount.text = _currentValue + "%";
 
-            if(_regen != null)
+            if (_regen != null)
             {
                 StopCoroutine(_regen);
             }
@@ -49,32 +50,20 @@ public class ThrusterBar : MonoBehaviour
         
     }
 
-
     IEnumerator RegenThruster()
     {
         yield return new WaitForSeconds(2.0f);
         _player.ActivateThruster();
 
-        while(_currentValue < maxValue)
+        while(_currentValue < _maxValue)
         {
-            _currentValue += maxValue / 100;
-            fill.fillAmount = (float)_currentValue / maxValue;
+            _currentValue += _maxValue / 100;
+            fill.fillAmount = (float)_currentValue / _maxValue;
+            _thrusterCount.text = _currentValue + "%";
             yield return regenTick;
         }
 
         _regen = null;
     }
-
-    /*public void AddThruster (int thruster)
-   {
-       _currentValue += thruster;
-
-       if(_currentValue > maxValue)
-       {
-           _currentValue = maxValue;
-       }
-
-       fill.fillAmount = (float)_currentValue / maxValue; //fill needs to be between 0-1. It expects a float. 
-   }*/
 }
 

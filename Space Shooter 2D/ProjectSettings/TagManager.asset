@@ -8,6 +8,8 @@ TagManager:
   - Laser
   - SpawnManager
   - Missile
+  - ShotDetection
+  - EnemyLaser
   layers:
   - Default
   - TransparentFX

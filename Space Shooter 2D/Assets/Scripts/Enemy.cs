@@ -4,26 +4,36 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private float _speed = 4.0f;
-
-    private Player _player;
+    [Header("Enemy Properties")]
+    [SerializeField] [Range(2.0f,15.0f)] private float _speed = 4.0f;
+    [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private float _timeBetweenFire;
+    [SerializeField] [Range(0f, 3.0f)] private float _minRandomTimeBetweenFire;
+    [SerializeField] [Range(4.0f, 7.0f)] private float _maxRandomTimeBetweenFire;
+    private float _lastTimeFire;
+    private bool _enemyDead = false;
     private Animator _anim;
 
+    [Header("Power Ups")]
+    [SerializeField] private int[] _percentageChance;
+    [SerializeField] private int _total;
+    private Vector3 _powerUpSpawnPosition;
+
+    [Header("Audio & SFX")]
     [SerializeField] private AudioClip _enemyExplosionClip;
     [SerializeField] private AudioSource _audioSource;
-    [SerializeField] private GameObject _enemyLaserPrefab;
-    private float _fireRate = 3.0f;
-    private float _canFire = -1.0f;
-    [SerializeField] private bool _enemyDead = false;
-    [SerializeField] private int _enemyID;
-    
 
+    [Header("Managers")]
+    [SerializeField] private SpawnManager _spawnManager;
+
+    private Player _player;
 
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
         _audioSource = GetComponent<AudioSource>();
-        
+        _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+        _anim = GetComponent<Animator>();
 
         if (_audioSource == null)
         {
@@ -39,15 +49,12 @@ public class Enemy : MonoBehaviour
             Debug.LogError("Player is Null");
         }
 
-        _anim = GetComponent<Animator>();
-
         if(_anim == null)
         {
             Debug.LogError("Enemy Explode Animator is Null");
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         CalculateMovement();
@@ -60,18 +67,11 @@ public class Enemy : MonoBehaviour
 
     void EnemyFire()
     {
-        if (Time.time > _canFire)
+        if (Time.time > _lastTimeFire + _timeBetweenFire)
         {
-            _fireRate = Random.Range(3f, 7f);
-            _canFire = Time.time + _fireRate;
-            GameObject enemyLaser = Instantiate(_enemyLaserPrefab, transform.position, Quaternion.identity);
-            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
-
-
-            for (int i = 0; i < lasers.Length; i++)
-            {
-                lasers[i].AssignEnemyLaser();
-            }
+            _timeBetweenFire = Random.Range(_minRandomTimeBetweenFire, _maxRandomTimeBetweenFire);
+            Instantiate(_laserPrefab, transform.position, Quaternion.identity);
+            _lastTimeFire = Time.time;
         }
     }
 
@@ -90,24 +90,26 @@ public class Enemy : MonoBehaviour
         if (other.tag == "Laser")
         {
             Destroy(other.gameObject, 0.1f);
+            _powerUpSpawnPosition = transform.position;
             _enemyDead = true;
-            
+            SpawnPowerUp();
+
             if (_player != null)
             {
                 _player.AddScore(10);
             }
+
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
-            //_audioSource.PlayOneShot(_audioSource.clip);
             AudioSource.PlayClipAtPoint(_enemyExplosionClip, transform.position);
             Destroy(GetComponent<Collider2D>());
-            Destroy(this.gameObject, 0.4f);
-            
+            Destroy(this.gameObject, 0.4f); 
         }
 
         if(other.tag == "Player")
         {
             Player player = other.GetComponent<Player>();
+            _powerUpSpawnPosition = transform.position;
             _enemyDead = true;
 
             if(player != null)
@@ -116,22 +118,52 @@ public class Enemy : MonoBehaviour
             }
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
-            //_audioSource.PlayOneShot(_audioSource.clip);
             AudioSource.PlayClipAtPoint(_enemyExplosionClip, transform.position);
             Destroy(GetComponent<Collider2D>());
+            SpawnPowerUp();
             Destroy(this.gameObject, 0.4f);
         }
 
         if(other.tag == "Missile")
         {
             Destroy(other.gameObject);
+            _powerUpSpawnPosition = transform.position;
             _enemyDead = true;
             _anim.SetTrigger("OnEnemyDeath");
             _speed = 0;
-            //_audioSource.PlayOneShot(_audioSource.clip);
             AudioSource.PlayClipAtPoint(_enemyExplosionClip, transform.position);
             Destroy(GetComponent<Collider2D>());
+            SpawnPowerUp();
             Destroy(this.gameObject, 0.4f);
         }
     }
+
+    public void SpawnPowerUp()
+    {
+        if(_enemyDead == true)
+        {
+            foreach (var weight in _percentageChance)
+            {
+                _total += weight;
+            }
+
+            int randomNumber = Random.Range(0, _total);
+
+            for (int i = 0; i < _percentageChance.Length; i++)
+            {
+                if (randomNumber <= _percentageChance[i])
+                {
+                    Instantiate(_spawnManager._powerUps[i], _powerUpSpawnPosition, Quaternion.identity);
+                    Debug.Log(_spawnManager._powerUps[i]);
+                    return;
+                }
+                else
+                {
+                    randomNumber -= _percentageChance[i];
+                }
+            }
+
+        }
+    }
+
 }

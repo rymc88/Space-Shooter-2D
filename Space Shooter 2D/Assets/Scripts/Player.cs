@@ -4,46 +4,68 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private float _speed = 3.0f;
-    [SerializeField] private string _playersInitials;
-    public int score;
-    [SerializeField] private bool _powerupActive;
-    [SerializeField] private GameObject _laserPrefab;
-    [SerializeField] private float _fireRate = 0.5f;
-    private float _fireTime = -1f;
+    [Header("Player Properties")]
     [SerializeField] private int _lives = 3;
-    private SpawnManager _spawnManager;
-    [SerializeField] private GameObject _tripleShotPrefab;
-    [SerializeField] private bool _isTripleShotActive = false;
-    [SerializeField] private bool _isSpeedBoostActive = false;
-    [SerializeField] private float _speedMulitplier = 2.0f;
-    [SerializeField] private bool _isShieldActive = false;
-    [SerializeField] private GameObject _shieldVisualizer;
+    [SerializeField][Range(2.0f,15.0f)] private float _speed = 3.0f;
+    [SerializeField][Range(0.25f, 1.0f)] private float _timeBetweenFire = 0.5f;
+    private float _lastFireTime;
+    public int _currentAmmo;
+    public int _maxAmmo = 15;
+    public int _currentThrusters;
+    public int _maxThrusters = 100;
     [SerializeField] private int _score;
-    private UIManager _uiManager;
+    [SerializeField] private bool _hasAmmo = true;
+    private Animator _animator;
+
+    [Header("Game Object")]
+    [SerializeField] private GameObject _laserPrefab;
+    [SerializeField] private GameObject _thrusters;
+    private GameObject _enemy;
+
+    [Header("Damage Indictors")]
     [SerializeField] private GameObject _leftEngine;
     [SerializeField] private GameObject _rightEngine;
-    [SerializeField] private AudioSource _audioSource;
-    [SerializeField] private AudioClip _laserSoundClip;
-    [SerializeField] private GameObject _thrusters;
-    public CameraShake cameraShake;
-    private Animator _animator;
+
+    [Header("Ammo Bar")]
+    [SerializeField] private AmmoBar _ammoBar;
+
+    [Header("Thruster Bar")]
     [SerializeField] private ThrusterBar _thrusterBar;
     private bool _canUseThruster = true;
-    public int _maxAmmo = 15;
-    public int _currentAmmo;
-    [SerializeField] private bool _hasAmmo = true;
+
+    [Header("Triple Shot Power Up")]
+    [SerializeField] private GameObject _tripleShotPrefab;
+    [SerializeField] private bool _isTripleShotActive = false;
+
+    [Header("Speed Boost Power Up")]
+    [SerializeField] private bool _isSpeedBoostActive = false;
+
+    [Header("Shield Power Up")]
+    [SerializeField] private bool _isShieldActive = false;
+    [SerializeField] private GameObject _shieldVisualizer;
     [SerializeField] private int _shieldStrength;
     [SerializeField] SpriteRenderer _spriteRender;
-    [SerializeField] private GameObject _missilePrefab;
-    private GameObject _enemy;
+
+    [Header("Rapid Fire Power")]
     [SerializeField] private bool _rapidFire = false;
-    private float _rapidFireRate = .25f;
+    [SerializeField] [Range(0.05f, 0.2f)] private float _rapidFireRate;
 
+    [Header("Missile")]
+    [SerializeField] private GameObject _missilePrefab;
     [SerializeField] private bool _homingMissileActive = false;
-    
 
-    // Start is called before the first frame update
+    [Header("Managers")]
+    private SpawnManager _spawnManager;
+    private UIManager _uiManager;
+
+    [Header("Audio and SFX")]
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _laserSoundClip;
+
+    [Header("Camera")]
+    public CameraShake cameraShake;
+
+
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
@@ -52,6 +74,7 @@ public class Player : MonoBehaviour
         _audioSource = GetComponent<AudioSource>();
         _animator = GetComponentInChildren<Animator>();
         _currentAmmo = _maxAmmo;
+        _currentThrusters = _maxThrusters;
             
         if(_thrusterBar == null)
         {
@@ -84,12 +107,11 @@ public class Player : MonoBehaviour
 
     }
 
-   // Update is called once per frame
     void Update()
     {
         CalculateMovement();
 
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _fireTime)
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _lastFireTime + _timeBetweenFire)
         {
             if(_hasAmmo == true)
             {
@@ -100,7 +122,7 @@ public class Player : MonoBehaviour
                 else
                 {
                     FireLaser();
-                } 
+                }
             }
         }
 
@@ -118,16 +140,14 @@ public class Player : MonoBehaviour
             {
                 Debug.Log("Enemy Target is NULL");
             }
-           
-            
         }
-
     }
 
     void CalculateMovement()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
+        _animator.SetFloat("Turning", horizontalInput);
 
         if(_isSpeedBoostActive == true)
         {
@@ -167,7 +187,6 @@ public class Player : MonoBehaviour
 
     void FireLaser()
     {
-        _fireTime = Time.time + _fireRate;
         var offset = new Vector3(0, 1.05f, 0);
 
         if(_isTripleShotActive == true)
@@ -179,20 +198,20 @@ public class Player : MonoBehaviour
             Instantiate(_laserPrefab, transform.position + offset, Quaternion.identity);
         }
 
+        _lastFireTime = Time.time;
         _audioSource.Play();
         _currentAmmo--;
+        _ammoBar.UseAmmo(1);
 
-
-        if(_currentAmmo <= 0)
+        if (_currentAmmo <= 0)
         {
             _hasAmmo = false;
         }
-
     }
 
     void RapidFire()
     {
-        _fireTime = Time.time + _rapidFireRate;
+        _timeBetweenFire -= _rapidFireRate;
         var offset = new Vector3(0, 1.05f, 0);
 
         if (_isTripleShotActive == true)
@@ -204,8 +223,10 @@ public class Player : MonoBehaviour
             Instantiate(_laserPrefab, transform.position + offset, Quaternion.identity);
         }
 
+        _lastFireTime = Time.time;
         _audioSource.Play();
         _currentAmmo--;
+        _ammoBar.UseAmmo(1);
 
 
         if (_currentAmmo <= 0)
@@ -324,10 +345,20 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.tag == "EnemyLaser")
+        {
+            Destroy(other.gameObject);
+            PlayerDamage();
+        }
+    }
+
     public void AmmoReload()
     {
         _currentAmmo = _maxAmmo;
         _hasAmmo = true;
+        _ammoBar.ReloadAmmo();
     }
 
     public void AddScore(int points)
@@ -356,7 +387,6 @@ public class Player : MonoBehaviour
     {
          yield return new WaitForSeconds(5.0f);
          _rapidFire = false;
-        
     }
 
     public void ActivateHomingMissile()
