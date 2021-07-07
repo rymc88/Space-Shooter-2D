@@ -54,7 +54,7 @@ MonoBehaviour:
   _timeBetweenFire: 0
   _minRandomTimeBetweenFire: 1.07
   _maxRandomTimeBetweenFire: 4
-  _percentageChance: 1e000000140000000a0000000a0000000a0000000a0000000a000000
+  _percentageChance: 14000000140000000a0000000a0000000a0000000a0000000a0000000a000000
   _total: 0
   _enemyExplosionClip: {fileID: 8300000, guid: 5563ecb7e1076014c8c293a818f6b5d9, type: 3}
   _audioSource: {fileID: 0}

@@ -136,3 +136,4 @@ MonoBehaviour:
   _speed: 3
   _powerUpID: 3
   _powerUpClip: {fileID: 8300000, guid: da8fa100d1f52b2408cedfddc26ef775, type: 3}
+  _magnetSpeed: 5

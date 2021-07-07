@@ -42,7 +42,7 @@ public class Enemy5 : MonoBehaviour
         transform.up = Vector3.MoveTowards(transform.up, direction, _rotationSpeed * Time.deltaTime); //Move the Up Position Towards the Player
 
         transform.position = Vector3.MoveTowards(transform.position, transform.position + transform.up, _speed * Time.deltaTime);
-
+       
     }
 
     private void OnTriggerEnter2D(Collider2D other)

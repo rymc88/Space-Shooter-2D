@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 82828227856307650}
   - component: {fileID: 5387996011533277814}
   m_Layer: 0
-  m_Name: Rapid Fire
+  m_Name: Rapid Fire PowerUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -136,3 +136,4 @@ MonoBehaviour:
   _speed: 3
   _powerUpID: 5
   _powerUpClip: {fileID: 8300000, guid: da8fa100d1f52b2408cedfddc26ef775, type: 3}
+  _magnetSpeed: 5

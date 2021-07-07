@@ -144,9 +144,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e6c1b9a58e094c9c939c03b27d58c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 2.71
+  _speed: 3.34
   _rotationSpeed: 2
-  _percentageChance: 1e000000140000000a0000000a0000000a0000000a0000000a000000
+  _percentageChance: 14000000140000000a0000000a0000000a0000000a0000000a0000000a000000
   _total: 0
   _enemyExplosionClip: {fileID: 8300000, guid: 5563ecb7e1076014c8c293a818f6b5d9, type: 3}
 --- !u!95 &8454742932540023502

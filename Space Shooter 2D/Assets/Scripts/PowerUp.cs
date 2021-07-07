@@ -10,18 +10,30 @@ public class PowerUp : MonoBehaviour
     //1 = Speed
     //2 = Shield
     [SerializeField] AudioClip _powerUpClip;
+    private Player _player;
+    [SerializeField] [Range(0f, 10f)] private float _magnetSpeed;
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        _player = GameObject.Find("Player").GetComponent<Player>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        Vector2 pos = transform.position;
+        Vector2 targetPos = _player.transform.position;
+        float magSpeed = _magnetSpeed * Time.deltaTime;
 
+        if(_player.isMagnetActive == true)
+        {
+            transform.position = Vector2.MoveTowards(pos, targetPos, magSpeed);
+        }
+        else
+        {
+            transform.Translate(Vector3.down * _speed * Time.deltaTime);
+        }
+
+        
         if (transform.position.y < -9)
         {
             Destroy(this.gameObject);
@@ -60,6 +72,9 @@ public class PowerUp : MonoBehaviour
                         break;
                     case 6:
                         player.ActivateHomingMissile();
+                        break;
+                    case 7:
+                        player.MagnetReload();
                         break;
                     default:
                         Debug.Log("Default Value");

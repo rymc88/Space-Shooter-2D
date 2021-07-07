@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     public int _maxAmmo = 15;
     public int _currentThrusters;
     public int _maxThrusters = 100;
+    public int _currentMagnet;
+    public int _maxMagnet = 100;
     [SerializeField] private int _score;
     [SerializeField] private bool _hasAmmo = true;
     private Animator _animator;
@@ -46,6 +48,11 @@ public class Player : MonoBehaviour
     [SerializeField] private int _shieldStrength;
     [SerializeField] SpriteRenderer _spriteRender;
 
+    [Header("Magnet Power Up")]
+    [SerializeField] private GameObject _magnetVisualizer;
+    [SerializeField] public bool isMagnetActive = false;
+    [SerializeField] private MagnetBar _magnetBar;
+
     [Header("Rapid Fire Power")]
     [SerializeField] private bool _rapidFire = false;
     [SerializeField] [Range(0.05f, 0.2f)] private float _rapidFireRate;
@@ -75,6 +82,12 @@ public class Player : MonoBehaviour
         _animator = GetComponentInChildren<Animator>();
         _currentAmmo = _maxAmmo;
         _currentThrusters = _maxThrusters;
+        _currentMagnet = _maxMagnet;
+
+        if(_magnetBar == null)
+        {
+            Debug.LogError("Magnet Bar is NULL");
+        }
             
         if(_thrusterBar == null)
         {
@@ -141,6 +154,16 @@ public class Player : MonoBehaviour
                 Debug.Log("Enemy Target is NULL");
             }
         }
+
+        if (Input.GetKey(KeyCode.C))
+        {
+            _magnetBar.UseMagnet(1);
+        }
+        else
+        {
+            DeactivateMagnet();
+        }
+        
     }
 
     void CalculateMovement()
@@ -392,6 +415,24 @@ public class Player : MonoBehaviour
     public void ActivateHomingMissile()
     {
         _homingMissileActive = true;
+    }
+
+    public void ActivateMagnet()
+    {
+        _magnetVisualizer.SetActive(true);
+        isMagnetActive = true;
+    }
+
+    public void DeactivateMagnet()
+    {
+        _magnetVisualizer.SetActive(false);
+        isMagnetActive = false;
+    }
+
+    public void MagnetReload()
+    {
+        _currentMagnet = _maxMagnet;
+        _magnetBar.ReloadMagnet();
     }
 }
 

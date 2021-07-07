@@ -99,6 +99,7 @@ MonoBehaviour:
   _speed: 3
   _powerUpID: 1
   _powerUpClip: {fileID: 8300000, guid: 90e7ce983566939418529a541dce2b47, type: 3}
+  _magnetSpeed: 5
 --- !u!58 &3274444140988795194
 CircleCollider2D:
   m_ObjectHideFlags: 0

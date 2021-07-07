@@ -105,7 +105,7 @@ MonoBehaviour:
   _laserPrefab: {fileID: 3301058159583006675, guid: 9231b18d905bd4f53a54034ef4ab7449,
     type: 3}
   _timeBetweenFire: 1.63
-  _percentageChance: 1e000000140000000a0000000a0000000a0000000a0000000a000000
+  _percentageChance: 14000000140000000a0000000a0000000a0000000a0000000a0000000a000000
   _total: 0
   _audioSource: {fileID: 0}
   _hitClip: {fileID: 8300000, guid: b996510712ba30744989308388c26537, type: 3}
