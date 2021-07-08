@@ -61,6 +61,9 @@ public class Player : MonoBehaviour
     [SerializeField] private GameObject _missilePrefab;
     [SerializeField] private bool _homingMissileActive = false;
 
+    [Header("Laser Beam Power Up")]
+    [SerializeField] private GameObject _laserBeam;
+
     [Header("Managers")]
     private SpawnManager _spawnManager;
     private UIManager _uiManager;
@@ -433,6 +436,18 @@ public class Player : MonoBehaviour
     {
         _currentMagnet = _maxMagnet;
         _magnetBar.ReloadMagnet();
+    }
+
+    public void LaserBeamActivate()
+    {
+        _laserBeam.SetActive(true);
+        StartCoroutine(LaserBeamPowerDown());
+    }
+
+    IEnumerator LaserBeamPowerDown()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _laserBeam.SetActive(false);
     }
 }
 

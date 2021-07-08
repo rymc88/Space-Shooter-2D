@@ -237,7 +237,7 @@ MonoBehaviour:
   _canon: {fileID: 2188929201983062455}
   _firePoint: {fileID: 2188929202155532669}
   _rotationSpeed: 6.09
-  _percentageChance: 14000000140000000a0000000a0000000a0000000a0000000a0000000a000000
+  _percentageChance: 140000000f0000000a0000000a0000000a0000000a0000000a0000000a00000005000000
   _total: 0
   _enemyExplosionClip: {fileID: 8300000, guid: 5563ecb7e1076014c8c293a818f6b5d9, type: 3}
   _spawnManager: {fileID: 0}

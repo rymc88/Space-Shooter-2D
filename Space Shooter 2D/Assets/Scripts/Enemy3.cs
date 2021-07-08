@@ -127,6 +127,18 @@ public class Enemy3 : MonoBehaviour
             SpawnPowerUp();
             Destroy(this.gameObject, 0.4f);
         }
+
+        if (other.tag == "LaserBeam")
+        {
+            _powerUpSpawnPosition = transform.position;
+            _enemyDead = true;
+            _anim.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            AudioSource.PlayClipAtPoint(_explosionClip, transform.position);
+            Destroy(GetComponent<Collider2D>());
+            SpawnPowerUp();
+            Destroy(this.gameObject, 0.4f);
+        }
     }
 
     public void SpawnPowerUp()

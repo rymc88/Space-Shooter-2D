@@ -10,6 +10,7 @@ TagManager:
   - Missile
   - ShotDetection
   - EnemyLaser
+  - LaserBeam
   layers:
   - Default
   - TransparentFX

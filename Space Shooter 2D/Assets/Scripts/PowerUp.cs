@@ -76,6 +76,9 @@ public class PowerUp : MonoBehaviour
                     case 7:
                         player.MagnetReload();
                         break;
+                    case 8:
+                        player.LaserBeamActivate();
+                        break;
                     default:
                         Debug.Log("Default Value");
                         break;
