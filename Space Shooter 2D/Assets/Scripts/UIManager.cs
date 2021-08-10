@@ -10,6 +10,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image _livesImg;
     [SerializeField] private Text _gameOverText;
     [SerializeField] private Text _restartText;
+    public Text _waveCountdownText;
+    public Text _waveNameText;
     private GameManager _gameManager;
     private Player _player;
 
@@ -20,6 +22,7 @@ public class UIManager : MonoBehaviour
         _gameOverText.gameObject.SetActive(false);
         _restartText.gameObject.SetActive(false);
         _gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+       
 
         if (_gameManager == null)
         {
@@ -30,7 +33,17 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-       
+         
+    }
+
+    public void WaveNameDisplay(string waveName)
+    {
+        _waveNameText.text = "" + waveName;
+    }
+
+    public void UpdateWaveCountdown(float countdown)
+    {
+        _waveCountdownText.text = "" + (int)countdown;
     }
 
     public void UpdateScore(int playerScore)

@@ -40,7 +40,7 @@ public class SpawnManager : MonoBehaviour
         {
             yield return new WaitForSeconds(5.0f);
             Vector3 spawnPosition = new Vector3(Random.Range(-9, 9), 7, 0);
-            int enemyNumber = Random.Range(0, 6);
+            int enemyNumber = Random.Range(0, 7);
             GameObject newEnemy = Instantiate(_enemyPrefab[enemyNumber], spawnPosition, Quaternion.identity);
             newEnemy.transform.parent = _enemyContainer.transform;
         }

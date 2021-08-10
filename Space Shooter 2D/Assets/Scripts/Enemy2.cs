@@ -59,11 +59,11 @@ public class Enemy2 : MonoBehaviour
             EnemyFire();
         }
 
-        if(transform.position.x < -11 || transform.position.x > 11)
+        /*if(transform.position.x < -11 || transform.position.x > 11)
         {
             Destroy(this.gameObject);
             _enemyDead = true;
-        }
+        }*/
     }
 
     private void CalculateMovement()
@@ -71,10 +71,22 @@ public class Enemy2 : MonoBehaviour
         if(_isMovingRight == true)
         {
             transform.Translate(Vector3.right * _speed * Time.deltaTime);
+
+            if(transform.position.x > 11)
+            {
+                transform.position = new Vector3(-10, Random.Range(3, 5), 0);
+            }
+
         }
         else
         {
             transform.Translate(Vector3.left * _speed * Time.deltaTime);
+
+            if(transform.position.x < -11)
+            {
+                transform.position = new Vector3(10, Random.Range(3, 5), 0);
+            }
+
         }
     }
 
