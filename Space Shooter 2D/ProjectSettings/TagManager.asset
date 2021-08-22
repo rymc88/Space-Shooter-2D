@@ -11,6 +11,11 @@ TagManager:
   - ShotDetection
   - EnemyLaser
   - LaserBeam
+  - ShieldGenerator
+  - BossSupport
+  - LeftCanon
+  - MainCanon
+  - RightCanon
   layers:
   - Default
   - TransparentFX
